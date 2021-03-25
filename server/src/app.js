@@ -14,9 +14,10 @@ app.use(bodyParser.json())
 app.use(cors())
 
 // endpoint
-app.get('/status', (req, res) => {
+// access payload: req.body
+app.post('/register', (req, res) => {
   res.send({
-    message: 'hello world!'
+    message: `Hello ${req.body.email} your user was registered, have fun!`
   })
 })
 
