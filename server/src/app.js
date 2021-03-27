@@ -2,7 +2,8 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const morgan = require('morgan')
-
+const { sequelize } = require('./models')
+const config = require('./config/config')
 // build server
 const app = express()
 
@@ -13,12 +14,12 @@ app.use(bodyParser.json())
 // providing a Connect/Express middleware
 app.use(cors())
 
-// endpoint
-// access payload: req.body
-app.post('/register', (req, res) => {
-  res.send({
-    message: `Hello ${req.body.email} your user was registered, have fun!`
-  })
-})
+require('./routes')(app)
 
-app.listen(process.env.PORT || 8081)
+// sync with database from /models
+sequelize.sync()
+  .then(() => {
+    // then start server
+    app.listen(config.port)
+    console.log(`Server started on port ${config.port}`)
+  })
